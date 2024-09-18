@@ -270,7 +270,7 @@ PAM RDP Heartbeat
 %AboutTxt%
 
 Version %gVersion%
-Copyright ©2024 PAM-Exchange
+Copyright Â©2024 PAM-Exchange
 	)
 	return
 
@@ -1300,7 +1300,5 @@ logWarning(line, msg) {
 logError(line, msg) {
 	log(LOG_ERROR,line,msg)
 }
-
-;--- end of script ---
 
 ;--- end of script ---
