@@ -45,7 +45,7 @@ Not a problem.
 You need to install AutoHotKey version 1.37.02 or newer version 1 series. It will not compile with AHK v2.
 
 To create an executable from the sources use the Ahk2Exe utility GUI or you can
-use this command line (one line):
+use this command (one line):
 
 ```
 "c:\Opt\AutoHotKey-v1\Compiler\ahk2exe.exe"
