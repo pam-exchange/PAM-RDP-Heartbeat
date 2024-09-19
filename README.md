@@ -26,6 +26,8 @@ The PAM-RDP-Heartbeat will send heartbeat signals to RDP sessions opened through
 mstsc.exe (regular RDP client) and to RDP sessions opened through Symantec PAM
 RDP applets.
 
+![PAM RDP Heartbear](/docs/pam-rdp-heartbeat.png)
+
 ## Quick quide
 
 + `Ctrl-Alt-ScrollLock` will show/hide the PAM RDP Heartbeat window. This works regardless of focus is the PAM RDP Heartbeat window or not.
