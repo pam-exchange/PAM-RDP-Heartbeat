@@ -29,14 +29,12 @@ RDP applets.
 ![PAM RDP Heartbear](/docs/pam-rdp-heartbeat.png)
 
 ## Quick quide
-
 + `Ctrl-Alt-ScrollLock` will show/hide the PAM RDP Heartbeat window. This works regardless of focus is the PAM RDP Heartbeat window or not.
 + `Ctrl-Alt-Down` will minimize all RDP sessions (focus is PAM RDP Heartbeat window)
 + `Ctrl-Alt-Up` will show all RDP sessions (focus is PAM RDP Heartbeat window)
 + `F5` will refresh the list (focus is PAM RDP Heartbeat window)
 
 ## Installation
-
 Just copy the executable to you favorite location.
 
 ## Compilation
@@ -62,25 +60,21 @@ Here AutoHotKey is installed in c:\opt\AutohotKey-v1 directory. The command
 uses UPX for compressions, but you can easily do without. Just remove the /compress parameter.
 
 ## Log files
-
 pam-rdp-heartbeat will create a log file in the users %TEMP% folder. If the size
 of the log file is larger than 5 MB, it will be rolled to
 pam-rdp-heartbeat.log.1. An existing pam-rdp-heartbeat.log.1 file will be rolled
 to pam-rdp-heartbeat.log.2, etc. Last log file kept is pam-rdp-heartbeat.log.5.
 
 ## Registry
-
 Parameters to the program is stored in the Windows Registry at the key
 HKCU\PAM-Exchange\PAM-RDP-Heartbeat.
 
 ## Security considerations
-
 The pam-rdp-heartbeat can be seen as a violation to the server settings having
 a screen saver/lock active and you should consult your IT administrators before
 using it.
 
 ## Known issues and limitations
-
 + When using Symantec PAM applets for RDP sessions the start time shown is the
 time when the Web session to PAM was started and not when the RDP session was started,
 thus the duration shown is not for the RDP session but for the PAM session.
