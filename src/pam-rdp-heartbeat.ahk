@@ -16,7 +16,7 @@ SetKeyDelay,0,50
 ;-------
 ; Information about the script 
 SplitPath, A_ScriptFullPath,,,,gScriptName, 
-gVersion:= "1.0.0"
+gVersion:= "1.1.0"
 
 global gProgramTitle:= "PAM RDP Heartbeat"
 global gSelfPid:= DllCall("GetCurrentProcessId")
@@ -25,6 +25,7 @@ global gSelfPidHex:= Format("{:04x}",gSelfPid)
 ;-------
 ; Log files and more
 ;
+global LOG_ALWAYS:= 0
 global LOG_ERROR:= 1
 global LOG_WARNING:= 2
 global LOG_INFO:= 3
@@ -47,9 +48,21 @@ LogInfo(A_Linenumber, "Start ----- gVersion= " gVersion)
 ;-----------------------------------------------------------------
 ; Default variables / load from registry
 ;-----------------------------------------------------------------
+SplitPath, A_ScriptFullPath, , dir, ext, name
+
+userPropertyPath:= A_AppData "\PAM-Exchange\PAM-RDP-Heartbeat"
+global userPropertyFilename:= userPropertyPath "/" name ".properties"
+userPropertyFilename:= StrReplace( userPropertyFilename, "/", "\" )
+
+if (!FileExist(userPropertyPath)) {
+	FileCreateDir, %userPropertyPath%
+}
+
 gosub SetVariableDefaults
+gosub LoadVariablesFromProperty
 gosub LoadVariablesFromRegistry
 gosub TestScreenSaver
+
 
 ; global variables
 global SessionList
@@ -245,7 +258,7 @@ btnExitEvent:
 GuiClose:
 	SetTimer, RefreshProcess,Delete
 	SetTimer, HeartbeatProcess,Delete
-	GoSub SaveVariablesToRegistry
+	GoSub SaveVariablesToProperty
 	ExitApp
 
 
@@ -270,7 +283,7 @@ PAM RDP Heartbeat
 %AboutTxt%
 
 Version %gVersion%
-Copyright ©2024 PAM-Exchange
+Copyright ©2024-2025 PAM-Exchange
 	)
 	return
 
@@ -917,12 +930,11 @@ SetVariableDefaults:
 
 ;--------------------------------------------------------------------------------------------------------
 LoadVariablesFromRegistry:
-	key:= "HKCU\Software\PAM-Exchange\PAM-RDP-Heartbeat"
-	gLogLevel:= 					ReadRegistry(key, "LogLevel", gLogLevel)
-	logInfo(A_Linenumber, "LoadVariablesFromRegistry: LogLevel= " gLogLevel)
+	key:= "HKLM\Software\PAM-Exchange\PAM-RDP-Heartbeat"
+	;gLogLevel:= 					ReadRegistry(key, "LogLevel", gLogLevel)
+	;logInfo(A_Linenumber, "LoadVariablesFromRegistry: LogLevel= " gLogLevel)
 	
 	logDebug(A_Linenumber, "LoadVariablesFromRegistry: RegistryKey= " key)
-	HeartbeatFrequency:= 			ReadRegistry(key, "HeartbeatFrequency", HeartbeatFrequency)
 	HeartbeatMinimum:= 	 			ReadRegistry(key, "HeartbeatMinimum", HeartbeatMinimum)
 	listColDurationWdt:= 			ReadRegistry(key, "listColDurationWdt", listColDurationWdt)
 	listColHwndWdt:= 				ReadRegistry(key, "listColHwndWdt", listColHwndWdt)
@@ -931,18 +943,14 @@ LoadVariablesFromRegistry:
 	listColStateWdt:= 				ReadRegistry(key, "listColStateWdt", listColStateWdt)
 	listColTitleWdt:= 				ReadRegistry(key, "listColTitleWdt", listColTitleWdt)
 	listRows:= 			 			ReadRegistry(key, "listRows", listRows)
-	RefreshFrequency:= 	 			ReadRegistry(key, "RefreshFrequency", RefreshFrequency)
 	RefreshMinimum:= 				ReadRegistry(key, "RefreshMinimum", RefreshMinimum)
-	StartMinimized:= 	 			ReadRegistry(key, "StartMinimized", StartMinimized)
-	StartX:= 			 			ReadRegistry(key, "StartX", StartX)
-	StartY:= 			 			ReadRegistry(key, "StartY", StartY)
-	StayOnTop:= 		 			ReadRegistry(key, "StayOnTop", StayOnTop)
 	UseTransparent:=	 			ReadRegistry(key, "UseTransparent", UseTransparent)
-	language:= 						ReadRegistry(key, "Language", language)
 
 	ScreenSaverRequired:=			ReadRegistry(key, "ScreenSaverRequired", ScreenSaverRequired)
 	ScreenSaverIdleMaximum:=		ReadRegistry(key, "ScreenSaverIdleMaximum", ScreenSaverIdleMaximum)
 
+	;MsgBox, HeartbeatMinimum= %HeartbeatMinimum%`nRefreshMinimum= %RefreshMinimum%`nScreenSaverRequired= %ScreenSaverRequired%`nScreenSaverIdleMaximum= %ScreenSaverIdleMaximum%
+	
 	key:= key . "\" . language
 	btnCancelTxt:= 		 			ReadRegistry(key, "btnCancelTxt", btnCancelTxt)
 	btnCloseTxt:= 		 			ReadRegistry(key, "btnCloseTxt", btnCloseTxt)
@@ -1022,14 +1030,8 @@ LoadVariablesFromRegistry:
 	listWidth:= 7+listColTitleWdt+listColPIDWdt+listColStartWdt+listColDurationWdt+listColStateWdt+listColHwndWdt
 	listHeader:= listColTitleTxt "|" listColPIDTxt "|" listColStartTxt "|" listColDurationTxt "|" listColStateTxt "|" listColHwndTxt
 
-	logDebug(A_Linenumber, "LoadVariablesFromRegistry: HeartbeatFrequency= " HeartbeatFrequency)
 	logDebug(A_Linenumber, "LoadVariablesFromRegistry: HeartbeatMinimum= " HeartbeatMinimum)
-	logDebug(A_Linenumber, "LoadVariablesFromRegistry: RefreshFrequency= " RefreshFrequency)
 	logDebug(A_Linenumber, "LoadVariablesFromRegistry: RefreshMinimum= " RefreshMinimum)
-	logDebug(A_Linenumber, "LoadVariablesFromRegistry: StartMinimized= " StartMinimized)
-	logDebug(A_Linenumber, "LoadVariablesFromRegistry: StartX= " StartX)
-	logDebug(A_Linenumber, "LoadVariablesFromRegistry: StartY= " StartY)
-	logDebug(A_Linenumber, "LoadVariablesFromRegistry: StayOnTop= " StayOnTop)
 	logDebug(A_Linenumber, "LoadVariablesFromRegistry: UseTransparent= " UseTransparent)
 	logDebug(A_Linenumber, "LoadVariablesFromRegistry: btnWidth= " btnWidth)
 	logDebug(A_Linenumber, "LoadVariablesFromRegistry: listColDurationWdt= " listColDurationWdt)
@@ -1043,70 +1045,138 @@ LoadVariablesFromRegistry:
 
 	;MsgBox, listWidth= %listWidth%`nlistHeader= %listHeader%`nlistColTitleWdt= %listColTitleWdt%, listColTitleTxt= %listColTitleTxt%`nlistColPIDWdt= %listColPIDWdt%, listColPIDTxt= %listColPIDTxt%`nlistColStartWdt= %listColStartWdt%, listColStartTxt= %listColStartTxt%`nlistColDurationWdt= %listColDurationWdt%, listColDurationTxt= %listColDurationTxt%`nlistColStateWdt= %listColStateWdt%, listColStateTxt= %listColStateTxt%
 	return
+
+;---------------------------------------------------------------------------------
+LoadVariablesFromProperty:
+
+	global LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_DEBUG, LOG_TRACE
+	global gLogLevel, ErrorMessage
 	
+	logDebug(A_LineNumber, "readProperties: userPropertyFilename= " userPropertyFilename )
+	
+	if (!FileExist(userPropertyFilename)) {
+		logAlways(A_LineNumber, "readProperties: file not found '" userPropertyFilename "' - use defaults")
+		return
+	}
+
+	IniRead, x, %userPropertyFilename%, main, LogLevel, "INFO"
+	switch x
+	{
+	case "ERROR":   LogLevel:= LOG_ERROR
+	case "WARNING": LogLevel:= LOG_WARNING
+	case "INFO":    LogLevel:= LOG_INFO
+	case "DEBUG":   LogLevel:= LOG_DEBUG
+	case "TRACE":   LogLevel:= LOG_TRACE
+	Default:        LogLevel:= LOG_DEBUG
+	}
+	gLogLevel:= LogLevel
+	logAlways(A_LineNumber, "ReadProperties: LogLevel= '" LogLevel "'")
+
+
+	;----------------------
+	; HeartbeatFrequency
+	;----------------------
+	IniRead, x, %userPropertyFilename%, main, HeartbeatFrequency, %HeartbeatFrequency%
+	logDebug(A_LineNumber, "ReadProperties: HeartbeatFrequency= '" x "' (file/default)")
+	if x is Integer
+		HeartbeatFrequency:= x
+	logInfo(A_LineNumber, "ReadProperties: HeartbeatFrequency= '" HeartbeatFrequency "' (final)")
+
+
+	;----------------------
+	; RefreshFrequency
+	;----------------------
+	IniRead, x, %userPropertyFilename%, main, RefreshFrequency, %RefreshFrequency%
+	logDebug(A_LineNumber, "ReadProperties: RefreshFrequency= '" x "' (file/default)")
+	if x is Integer
+		RefreshFrequency:= x
+	logInfo(A_LineNumber, "ReadProperties: RefreshFrequency= '" RefreshFrequency "' (final)")
+
+	;----------------------
+	; StartMinimized
+	;----------------------
+	def:= (StartMinimized ? "true" : "false")
+	IniRead, x, %userPropertyFilename%, main, StartMinimized, %def%
+	logDebug(A_LineNumber, "ReadProperties: StartMinimized= '" x "' (file/default)")
+	StartMinimized:= InStr(x, "true")
+	logInfo(A_LineNumber, "ReadProperties: StartMinimized= '" StartMinimized "' (final)")
+
+	;----------------------
+	; StartX
+	;----------------------
+	IniRead, x, %userPropertyFilename%, main, StartX, %StartX%
+	logDebug(A_LineNumber, "ReadProperties: StartX= '" x "' (file/default)")
+	if x is Integer
+		StartX:= x
+	logInfo(A_LineNumber, "ReadProperties: StartX= '" StartX "' (final)")
+
+	;----------------------
+	; StartY
+	;----------------------
+	IniRead, x, %userPropertyFilename%, main, StartY, %StartY%
+	logDebug(A_LineNumber, "ReadProperties: StartY= '" x "' (file/default)")
+	if x is Integer
+		StartY:= x
+	logInfo(A_LineNumber, "ReadProperties: StartY= '" StartY "' (final)")
+
+	;----------------------
+	; StayOnTop
+	;----------------------
+	def:= (StayOnTop ? "true" : "false")
+	IniRead, x, %userPropertyFilename%, main, StayOnTop, %def%
+	logDebug(A_LineNumber, "ReadProperties: StayOnTop= '" x "' (file/default)")
+	StayOnTop:= InStr(x, "true")
+	logInfo(A_LineNumber, "ReadProperties: StayOnTop= '" StayOnTop "' (final)")
+
+	;----------------------
+	; Language
+	;----------------------
+	IniRead, x, %userPropertyFilename%, main, Language, %Language%
+	logDebug(A_LineNumber, "ReadProperties: Language= '" x "' (file/default)")
+	Language:= x
+	logInfo(A_LineNumber, "ReadProperties: Language= '" Language "' (final)")
+
+	;MsgBox, userPropertyFilename= %userPropertyFilename%`nHeartbeatFrequency= %HeartbeatFrequency%`nRefreshFrequency= %RefreshFrequency%`nStartMinimized= %StartMinimized%`nStartX= %StartX%`nStartY= %StartY%`nStayOnTop= %StayOnTop%`nLanguage= %Language%
+	
+	return
+
 ;--------------------------------------------------------------------------------------------------------
-SaveVariablesToRegistry:
+; Write pam-rdp.properties
+;
+SaveVariablesToProperty:
+	logDebug(A_LineNumber, "writeProperties: " userPropertyFilename)
+	
+	;global LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_DEBUG, LOG_TRACE
 	WinGetPos,posX,posY,,,%gProgramTitle%
-	key:= "HKCU\Software\PAM-Exchange\PAM-RDP-Heartbeat"
+	
+	if FileExist( userPropertyFilename ) {
+		logDebug(A_LineNumber, "writeProperties: Delete file '" userPropertyFilename "'")
+		FileDelete, %userPropertyFilename%
+	}
+	
+	wrtLogLevel:= "LogLevel= " ((LogLevel = LOG_ERROR) ? "ERROR" : (LogLevel = LOG_WARNING) ? "WARNING" : (LogLevel = LOG_INFO) ? "INFO" : (LogLevel = LOG_DEBUG) ? "DEBUG" : "TRACE")
+	wrtHeartbeatFrequency:= "HeartbeatFrequency= " HeartbeatFrequency
+	wrtRefreshFrequency:= "RefreshFrequency= " RefreshFrequency
+	wrtStartX:= "StartX= " posX
+	wrtStartY:= "StartY= " posY
+	wrtStartMinimized:= "StartMinimized= " ((StartMinimized) ? "true" : "false")
+	wrtStayOnTop:= "StayOnTop= " (StayOnTop ? "true" : "false")
+	wrtLanguage:= "Language= " Language
 
-	logDebug(A_Linenumber, "SaveVariablesToRegistry: RegistryKey= " key)
+	content:= "[main]"
+	content:= content "`n" wrtLogLevel
+	content:= content "`n" wrtHeartbeatFrequency
+	content:= content "`n" wrtRefreshFrequency
+	content:= content "`n" wrtStartX
+	content:= content "`n" wrtStartY
+	content:= content "`n" wrtStartMinimized
+	content:= content "`n" wrtStayOnTop
+	content:= content "`n" wrtLanguage
 
-	WriteRegistry("REG_DWORD", key, "LogLevel", gLogLevel)
-	WriteRegistry("REG_DWORD", key, "HeartbeatFrequency", HeartbeatFrequency)
-	WriteRegistry("REG_DWORD", key, "HeartbeatMinimum", HeartbeatMinimum)
-	WriteRegistry("REG_DWORD", key, "listColDurationWdt", listColDurationWdt)
-;	WriteRegistry("REG_DWORD", key, "listColHwndWdt", listColHwndWdt)
-	WriteRegistry("REG_DWORD", key, "listColPIDWdt", listColPIDWdt)
-	WriteRegistry("REG_DWORD", key, "listColStartWdt", listColStartWdt)
-	WriteRegistry("REG_DWORD", key, "listColStateWdt", listColStateWdt)
-	WriteRegistry("REG_DWORD", key, "listColTitleWdt", listColTitleWdt)
-	WriteRegistry("REG_DWORD", key, "RefreshFrequency", RefreshFrequency)
-	WriteRegistry("REG_DWORD", key, "RefreshMinimum", RefreshMinimum)
-	WriteRegistry("REG_DWORD", key, "StartMinimized", StartMinimized)
-	WriteRegistry("REG_DWORD", key, "StartX", posX)
-	WriteRegistry("REG_DWORD", key, "StartY", posY)
-	WriteRegistry("REG_DWORD", key, "StayOnTop", StayOnTop)
-;	WriteRegistry("REG_DWORD", key, "UseTransparent", UseTransparent)
-	WriteRegistry("REG_SZ",    key, "Language", language)
-
-	key:= key . "\" . language
-	logDebug(A_Linenumber, "SaveVariablesToRegistry: RegistryKey= " key)
-
-	WriteRegistry("REG_SZ", key, "btnCancelTxt", btnCancelTxt)
-	WriteRegistry("REG_SZ", key, "btnCloseTxt", btnCloseTxt)
-	WriteRegistry("REG_SZ", key, "btnExitTxt", btnExitTxt)
-	WriteRegistry("REG_SZ", key, "btnUpdateTxt", btnUpdateTxt)
-	WriteRegistry("REG_SZ", key, "HeartbeatFrequencyTxt", HeartbeatFrequencyTxt)
-	WriteRegistry("REG_SZ", key, "listColDurationTxt", listColDurationTxt)
-;	WriteRegistry("REG_SZ", key, "listColHwndTxt", listColHwndTxt)
-	WriteRegistry("REG_SZ", key, "listColPIDTxt", listColPIDTxt)
-	WriteRegistry("REG_SZ", key, "listColStartTxt", listColStartTxt)
-	WriteRegistry("REG_SZ", key, "listColStateTxt", listColStateTxt)
-	WriteRegistry("REG_SZ", key, "listColTitleTxt", listColTitleTxt)
-	WriteRegistry("REG_SZ", key, "mnuActionMinimizeAllTxt", mnuActionMinimizeAllTxt)
-	WriteRegistry("REG_SZ", key, "mnuActionRefreshTxt", mnuActionRefreshTxt)
-	WriteRegistry("REG_SZ", key, "mnuActionShowAllTxt", mnuActionShowAllTxt)
-	WriteRegistry("REG_SZ", key, "mnuActionTxt", mnuActionTxt)
-	WriteRegistry("REG_SZ", key, "mnuFileExitTxt", mnuFileExitTxt)
-	WriteRegistry("REG_SZ", key, "mnuFileTxt", mnuFileTxt)
-	WriteRegistry("REG_SZ", key, "mnuHelpAboutTxt", mnuHelpAboutTxt)
-	WriteRegistry("REG_SZ", key, "mnuHelpQuickGuideTxt", mnuHelpQuickGuideTxt)
-	WriteRegistry("REG_SZ", key, "mnuHelpTxt", mnuHelpTxt)
-	WriteRegistry("REG_SZ", key, "mnuSettingsPreferencesTxt", mnuSettingsPreferencesTxt)
-	WriteRegistry("REG_SZ", key, "mnuSettingsStartMinimizedTxt", mnuSettingsStartMinimizedTxt)
-	WriteRegistry("REG_SZ", key, "mnuSettingsStayOnTopTxt", mnuSettingsStayOnTopTxt)
-	WriteRegistry("REG_SZ", key, "mnuSettingsTxt", mnuSettingsTxt)
-	WriteRegistry("REG_SZ", key, "RefreshFrequencyTxt", RefreshFrequencyTxt)
-	WriteRegistry("REG_SZ", key, "StartMinimizedTxt", StartMinimizedTxt)
-	WriteRegistry("REG_SZ", key, "StayOnTopTxt", StayOnTopTxt)
-;	WriteRegistry("REG_SZ", key, "UseTransparentTxt", UseTransparentTxt)
-
-	QuickGuideTxt:= StrReplace(QuickGuideTxt,"`n","\n")
-	WriteRegistry("REG_SZ", key, "QuickGuideTxt", QuickGuideTxt)
-
-	AboutTxt:= StrReplace(AboutTxt,"`n","\n")
-	WriteRegistry("REG_SZ", key, "AboutTxt", AboutTxt)
-
+	FileAppend, %content%, %userPropertyFilename%
+	
+	;MsgBox, userPropertyFilename= %userPropertyFilename%`n`ncontent=`n%content%
+	
 	return
 
 ;--------------------------------------------------------------------------------------------------------
@@ -1262,6 +1332,8 @@ LogRoll(filename, maxSize:= 5, keep:=5) {
 ;---------------------------------------------------------------------------------
 log(level, line, msg) {
 	if (level <= gLogLevel) { 
+		if (level == LOG_ALWAYS)
+			levelTxt:= "ALW"
 		if (level == LOG_ERROR)
 			levelTxt:= "ERR"
 		if (level == LOG_WARNING)
@@ -1279,6 +1351,10 @@ log(level, line, msg) {
 		h.write(txt)
 		h.close()
 	}
+}
+
+logAlways(line, msg) {
+	log(LOG_ALWAYS,line,msg)
 }
 
 logTrace(line, msg) {
