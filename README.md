@@ -75,8 +75,8 @@ uses UPX for compressions, but you can easily do without. Just remove the /compr
 ## Log files
 `pam-rdp-heartbeat` program will create a log file in the users %TEMP% folder. If the size
 of the log file is larger than 5 MB, it will be rolled to
-pam-rdp-heartbeat.log.1. An existing pam-rdp-heartbeat.log.1 file will be rolled
-to pam-rdp-heartbeat.log.2, etc. Last log file kept is pam-rdp-heartbeat.log.5.
+`pam-rdp-heartbeat.log.1`. An existing pam-rdp-heartbeat.log.1 file will be rolled
+to `pam-rdp-heartbeat.log.2`, etc. Last log file kept is `pam-rdp-heartbeat.log.5`.
 
 ## Registry
 Parameters to the program is stored in the Windows Registry at the key
