@@ -42,6 +42,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Files]
 Source: ".\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\dist\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\dist\pam-rdp-heartbeat.reg"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -56,7 +57,6 @@ Root: HKLM; Subkey: "Software\{#MyAppPublisher}"; Flags: uninsdeletekeyifempty
 Root: HKLM; Subkey: "SOFTWARE\{#MyAppPublisher}\{#MyAppName}"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "SOFTWARE\{#MyAppPublisher}\{#MyAppName}"; ValueType: dword; ValueName: "HeartbeatMinimum"; ValueData: $0000000a; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "SOFTWARE\{#MyAppPublisher}\{#MyAppName}"; ValueType: dword; ValueName: "RefreshMinimum"; ValueData: $00000005; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "SOFTWARE\{#MyAppPublisher}\{#MyAppName}"; ValueType: dword; ValueName: "StartMinimized"; ValueData: $00000000; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "SOFTWARE\{#MyAppPublisher}\{#MyAppName}"; ValueType: dword; ValueName: "ScreenSaverRequired"; ValueData: $00000001; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "SOFTWARE\{#MyAppPublisher}\{#MyAppName}"; ValueType: dword; ValueName: "ScreenSaverIdleMaximum"; ValueData: $00000384; Flags: uninsdeletevalue
 

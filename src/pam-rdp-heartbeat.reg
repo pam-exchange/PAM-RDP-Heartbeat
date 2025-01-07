@@ -1,0 +1,46 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\PAM-Exchange]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\PAM-Exchange\PAM-RDP-Heartbeat]
+"HeartbeatMinimum"=dword:0000000a
+"RefreshMinimum"=dword:00000005
+"ScreenSaverRequired"=dword:00000000
+"ScreenSaverIdleMaximum"=dword:00000384
+"listColDurationWdt"=dword:00000037
+"listColPIDWdt"=dword:00000032
+"listColStartWdt"=dword:00000037
+"listColStateWdt"=dword:00000000
+"listColTitleWdt"=dword:000000aa
+"listRows"=dword:0000000a
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\PAM-Exchange\PAM-RDP-Heartbeat\en-US]
+"btnCancelTxt"="&Cancel"
+"btnCloseTxt"="&Close"
+"btnExitTxt"="E&xit"
+"btnUpdateTxt"="&Update"
+"HeartbeatFrequencyTxt"="&Heartbeat frequency (sec)"
+"listColDurationTxt"="Duration"
+"listColPIDTxt"="PID"
+"listColStartTxt"="Start"
+"listColStateTxt"="State"
+"listColTitleTxt"="Title"
+"mnuActionMinimizeAllTxt"="&Minimize All"
+"mnuActionRefreshTxt"="&Refresh"
+"mnuActionShowAllTxt"="&Show All"
+"mnuActionTxt"="&Action"
+"mnuFileExitTxt"="E&xit"
+"mnuFileTxt"="&File"
+"mnuHelpAboutTxt"="&About"
+"mnuHelpQuickGuideTxt"="Quick &guide"
+"mnuHelpTxt"="&Help"
+"mnuSettingsPreferencesTxt"="&Preferences"
+"mnuSettingsStartMinimizedTxt"="Start &Minimized"
+"mnuSettingsStayOnTopTxt"="Stay on &Top"
+"mnuSettingsTxt"="&Settings"
+"RefreshFrequencyTxt"="&Refresh frequency (sec)"
+"StartMinimizedTxt"="Start &Minimized"
+"StayOnTopTxt"="Stay on &Top"
+"QuickGuideTxt"="In the menu item 'Settings > Preferences' timers for background actions can be defined. The heartbeat timer will control how often the heartbeat is send to both active and hidden RDP sessions. The value should depend of the timeout values defined on the servers connected to from the Desktop. Typically, sending a heartbeat signal every 30'th second is sufficient. The refresh timer will control how often the list of RDP sessions is updated. Typical values are every 10 to 30 seconds. It is also possible to refress the list manually by pressiong F5. The flags 'Stay on Top' and 'Start Minimized' are controlling the PAM RDP Heartbeat window behaviour.\\n\\nAlt-Ctrl-ScrollLock\\nWill show/activate or hide the GUI window. This will work even when showing an RDP fullscreen session.\\n\\nWhen the PAM RDP Heartbeat GUI is active, additional functions are available.\\n\\nAlt-Ctrl-Down\\nMinimize/hide all RDP windows.\\n\\nAlt-Ctrl-Up\\nRestore all hidden RDP windows.\\n\\nF5\\nManually refresh the list of RDP sessions."
+"AboutTxt"="The program sends heartbeat signals to RDP sessions. When RDP sessions are minimized, the RDP GUI is hidden and heartbeat messages are still being accepted by the session."
+

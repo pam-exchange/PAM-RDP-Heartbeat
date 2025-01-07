@@ -1,4 +1,4 @@
-# PAM-RDP-Heartbeat
+# PAM RDP Heartbeat
 Have you experienced a sometime lengthy process starting an RDP session through
 your favorite PAM tool, only to find that your server will kick in with a screen
 saver? To unlock the session again, you will need a password, but you do not
@@ -22,7 +22,7 @@ settings you can configure how frequent the heartbeat signal is used and other
 settings too. To show/hide the PAM-RDP-Heartbeat window to the foreground press
 `Ctrl-Alt-ScrollLock`.
 
-The PAM-RDP-Heartbeat will send heartbeat signals to RDP sessions opened through
+<b>PAM RDP Heartbeat</b> will send heartbeat signals to RDP sessions opened through
 mstsc.exe (regular RDP client) and to RDP sessions opened through Symantec PAM
 RDP applets.
 
@@ -42,7 +42,8 @@ You want to compile the AutoHotKey sources yourself?
 
 Not a problem.
 
-You need to have AutoHotKey version 1.37.02 or newer version 1 series installed. It will not compile with AHK v2.
+You need to have AutoHotKey version 1.37.02 or newer version 1 series installed. 
+It will not compile with AHK v2.
 
 To create an executable from the sources use the Ahk2Exe utility GUI or you can
 use this command (one line):
