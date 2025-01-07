@@ -5,7 +5,7 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\PAM-Exchange\PAM-RDP-Heartbeat]
 "HeartbeatMinimum"=dword:0000000a
 "RefreshMinimum"=dword:00000005
-"ScreenSaverRequired"=dword:00000000
+"ScreenSaverRequired"=dword:00000001
 "ScreenSaverIdleMaximum"=dword:00000384
 "listColDurationWdt"=dword:00000037
 "listColPIDWdt"=dword:00000032
