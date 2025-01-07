@@ -88,7 +88,7 @@ If you do not use the installer, you can merge the file to your registry.
 ## Configuration
 In the `pam-rdp-heartbeat` program you can define various settings. These settings user individual 
 and are stored in the users roaming profile in the file 
-`%AppData%\PAM-Exchange\PAM-RDP-Heartbeat\pam-rdp-heartbeat.profile`. 
+`%AppData%\PAM-Exchange\PAM-RDP-Heartbeat\pam-rdp-heartbeat.properties`. 
 
 ## Security considerations
 **PAM RDP Heartbeat** can be seen as a violation to the server settings having
