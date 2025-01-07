@@ -80,10 +80,15 @@ to pam-rdp-heartbeat.log.2, etc. Last log file kept is pam-rdp-heartbeat.log.5.
 
 ## Registry
 Parameters to the program is stored in the Windows Registry at the key
-`HKCU\PAM-Exchange\PAM-RDP-Heartbeat`.
+`HKLM\PAM-Exchange\PAM-RDP-Heartbeat`.
 
 The file `pam-rdp-heartbeat.reg` contains the registry keys created by the installer. 
 If you do not use the installer, you can merge the file to your registry.
+
+## Configuration
+In the `pam-rdp-heartbeat` program you can define various settings. These settings user individual 
+and are stored in the users roaming profile in the file 
+`%AppData%\PAM-Exchange\PAM-RDP-Heartbeat\pam-rdp-heartbeat.profile`. 
 
 ## Security considerations
 **PAM RDP Heartbeat** can be seen as a violation to the server settings having
