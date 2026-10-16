@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 
 set AHK_HOME=C:\opt\AutoHotkey_1.1.37.02
 set INNO_HOME=C:\opt\InnoSetup-7.1.0
@@ -20,8 +20,6 @@ rem
 rem xcopy /S /I /Y Docs %DIST%\Docs
 copy /Y LICENSE %DIST%
 copy /Y %SRC%\pam-rdp-heartbeat.reg %DIST%
-
-pause
 
 rem
 rem InnoSetup
