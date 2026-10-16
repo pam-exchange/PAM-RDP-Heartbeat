@@ -2,7 +2,6 @@
 
 SHELL = cmd.exe
 
-AHK_HOME ?= C:\opt\AutoHotkey_1.1.37.02
 INNO_HOME ?= C:\opt\InnoSetup-7.1.0
 INSTALL_DIR ?= C:\Program Files\PAM-Exchange\PAM-RDP-Heartbeat
 
@@ -24,7 +23,7 @@ build: inc-version
 	-if not exist $(DIST) mkdir $(DIST)
 	-if exist $(DIST)\PAM-RDP-Heartbeat-Install-*.exe del /Q /F $(DIST)\PAM-RDP-Heartbeat-Install-*.exe
 	-if exist $(DIST)\PAM-RDP-Heartbeat.exe del /Q /F $(DIST)\PAM-RDP-Heartbeat.exe
-	-"$(AHK_HOME)\Compiler\ahk2exe.exe" /base "$(AHK_HOME)\Compiler\Unicode 64-bit.bin" /compress 2 /icon "$(SRC)\$(NAME).ico" /in "$(SRC)\$(NAME).ahk" /out "$(DIST)\$(NAME).exe"
+	-$(PYTHON) -m PyInstaller --noconsole --onefile --icon="$(SRC)\$(NAME).ico" --name="$(NAME)" --distpath="$(DIST)" --workpath="build" "$(SRC)\$(NAME).py"
 	-copy /Y LICENSE $(DIST)
 	-copy /Y version $(DIST)
 	-copy /Y "$(SRC)\pam-rdp-heartbeat.reg" $(DIST)
@@ -46,4 +45,6 @@ uninstall:
 clean:
 	@echo Cleaning build artifacts...
 	-if exist $(DIST) rmdir /S /Q $(DIST)
+	-if exist build rmdir /S /Q build
+	-if exist $(NAME).spec del /Q /F $(NAME).spec
 	-if exist PAM-RDP-Heartbeat-*.zip del /Q /F PAM-RDP-Heartbeat-*.zip
