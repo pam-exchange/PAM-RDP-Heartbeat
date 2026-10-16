@@ -22,14 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-;@Ahk2Exe-SetFileVersion 1.1.0.0
-;@Ahk2Exe-SetProductVersion 1.1.0.0
+;@Ahk2Exe-SetFileVersion 1.1.0.8
+;@Ahk2Exe-SetProductVersion 1.1.0.8
 ;@Ahk2Exe-SetCopyright Copyright (c) 2024-2026 PAM-Exchange
-;@Ahk2Exe-SetProp LegalCopyright, Copyright (c) 2024-2026 PAM-Exchange
-;@Ahk2Exe-SetProp FileVersion, 1.1.0.0
-;@Ahk2Exe-SetProp ProductVersion, 1.1.0.0
-;@Ahk2Exe-SetProp CompanyName, PAM-Exchange
-;@Ahk2Exe-SetProp ProductName, PAM RDP Heartbeat
+;@Ahk2Exe-SetProductVersion 1.1.0.8
+;@Ahk2Exe-SetCompanyName PAM-Exchange
+;@Ahk2Exe-SetProductName PAM RDP Heartbeat
+;@Ahk2Exe-SetDescription Sends heartbeat signal to RDP sessions
 
 ;#SingleInstance Ignore		; don't start if already running
 #SingleInstance Force		; relaunch if already running
@@ -49,7 +48,7 @@ SetKeyDelay,0,50
 ;-------
 ; Information about the script
 SplitPath, A_ScriptFullPath,,,,gScriptName,
-gVersion:= "1.1.0.0"
+gVersion:= "1.1.0.8"
 
 global gProgramTitle:= "PAM RDP Heartbeat"
 global gSelfPid:= DllCall("GetCurrentProcessId")
