@@ -41,21 +41,32 @@ programs are installed and registry is updated.
 You can also merge the registry file `pam-rdp-heartbeat.reg` and run the program without
 installing it first.
 
-## Compilation
-You want to compile the AutoHotKey sources yourself?
+## Toolchain & Compilation
 
-Not a problem.
+To build **PAM RDP Heartbeat** from source, you need the following toolchain:
 
-You need to have AutoHotKey version 1.37.02 or newer version 1 series installed. 
-It will not compile with AHK v2.
++ **GNU Make** (or compatible `make` utility)
++ **Python 3** (used by the build script to increment build numbers)
++ **AutoHotkey v1** (version 1.1.37.02 or newer v1 series) with `Ahk2Exe` compiler (Note: AHK v2 is not supported)
++ **Inno Setup** (version 6.3.3 or 7.1.0+) with `ISCC` compiler (for generating the installer)
++ **Zip / PowerShell** (for packaging and installation)
 
-If you want to build the installer you will need Inno Setup version 6.3.3.
+### Versioning
+The version number is stored in the `version` file in the format `1.1.0.x`, where `x` is the build number. Each time `make build` is run, the build number is automatically incremented by 1 and stamped into executable details (file version, product version), copyright notice (`Copyright (c) 2024-2026 PAM-Exchange`), and installer script.
 
-Run the script `build.cmd` and it will package the source as executable and create 
-the installer file and package everything into a zip-file.
+### Building using Makefile
+
+You can run `make` or `build.cmd` with the following targets:
+
++ `make build` (or `build.cmd build`): Increments the build number in `version`, updates source file compiler directives, compiles `src/pam-rdp-heartbeat.ahk` to executable in `dist/`, copies configuration files, and builds the Inno Setup installer.
++ `make package` (or `build.cmd package`): Packages the compiled binary distribution into `PAM-RDP-Heartbeat-1.1.0.x.zip` and the source files into `PAM-RDP-Heartbeat-Source-1.1.0.x.zip`.
++ `make all` (or `make` / `build.cmd`): Runs both `build` and `package`.
++ `make install`: Unzips `PAM-RDP-Heartbeat-1.1.0.x.zip` to `C:\Program Files\PAM-Exchange\PAM-RDP-Heartbeat`.
++ `make uninstall`: Removes the installed files from `C:\Program Files\PAM-Exchange\PAM-RDP-Heartbeat`.
++ `make clean`: Cleans up the `dist` build directory and generated `.zip` packages.
 
 If you really want to control the compilation and packaging of the AutoHotKey source 
-file, run the command below.
+file directly, run the command below.
 
 To create an executable from the sources use the Ahk2Exe utility GUI or you can
 use this command (one line):
