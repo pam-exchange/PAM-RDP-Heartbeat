@@ -54,11 +54,9 @@ def main():
             f';@Ahk2Exe-SetFileVersion {new_version}\n'
             f';@Ahk2Exe-SetProductVersion {new_version}\n'
             f';@Ahk2Exe-SetCopyright {copyright_str}\n'
-            f';@Ahk2Exe-SetProp LegalCopyright, {copyright_str}\n'
-            f';@Ahk2Exe-SetProp FileVersion, {new_version}\n'
-            f';@Ahk2Exe-SetProp ProductVersion, {new_version}\n'
-            f';@Ahk2Exe-SetProp CompanyName, PAM-Exchange\n'
-            f';@Ahk2Exe-SetProp ProductName, PAM RDP Heartbeat\n'
+            f';@Ahk2Exe-SetCompanyName PAM-Exchange\n'
+            f';@Ahk2Exe-SetProductName PAM RDP Heartbeat\n'
+            f';@Ahk2Exe-SetDescription Sends heartbeat signal to RDP sessions\n'
         )
 
         # Remove existing directives if present
