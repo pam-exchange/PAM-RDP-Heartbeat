@@ -1,7 +1,7 @@
-@echo off
+rem @echo off
 
-set AHK_HOME=C:\opt\AutoHotKey-v1
-set INNO_HOME=C:\opt\InnoSetup-6.3.3
+set AHK_HOME=C:\opt\AutoHotkey_1.1.37.02
+set INNO_HOME=C:\opt\InnoSetup-7.1.0
 
 set DIST=.\dist
 if exist %DIST% rmdir /S /Q %DIST%
@@ -21,10 +21,12 @@ rem xcopy /S /I /Y Docs %DIST%\Docs
 copy /Y LICENSE %DIST%
 copy /Y %SRC%\pam-rdp-heartbeat.reg %DIST%
 
+pause
+
 rem
 rem InnoSetup
 rem
-set INNO_SCRIPT=.\PAM-RDP-Heartbeat.iss
+set INNO_SCRIPT="PAM-RDP-Heartbeat.iss"
 %INNO_HOME%\ISCC.exe /O%DIST% %INNO_SCRIPT%
 
 rem 
@@ -35,3 +37,10 @@ if exist %NAME%.zip erase /Q /F %NAME%.zip
 cd %DIST%
 zip -r ..\%NAME%.zip *.*
 cd ..
+
+rem 
+rem Package sources to zip file
+rem
+set NAME=PAM-RDP-Heartbeat-Source
+if exist %NAME%.zip erase /Q /F %NAME%.zip
+zip -r %NAME%.zip .\docs .\src .\build.cmd .\README.md .\LICENSE PAM-RDP-Heartbeat.iss
