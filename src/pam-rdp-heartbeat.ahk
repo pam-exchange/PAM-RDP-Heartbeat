@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-;@Ahk2Exe-SetFileVersion 1.1.0.5
-;@Ahk2Exe-SetProductVersion 1.1.0.5
+;@Ahk2Exe-SetFileVersion 1.1.0.12
+;@Ahk2Exe-SetProductVersion 1.1.0.12
 ;@Ahk2Exe-SetCopyright Copyright (c) 2024-2026 PAM-Exchange
 ;@Ahk2Exe-SetCompanyName PAM-Exchange
 ;@Ahk2Exe-SetProductName PAM RDP Heartbeat
@@ -47,7 +47,7 @@ SetKeyDelay,0,50
 ;-------
 ; Information about the script
 SplitPath, A_ScriptFullPath,,,,gScriptName,
-gVersion:= "1.1.0.5"
+gVersion:= "1.1.0.12"
 
 global gProgramTitle:= "PAM RDP Heartbeat"
 global gSelfPid:= DllCall("GetCurrentProcessId")
@@ -1223,6 +1223,7 @@ TestScreenSaver:
 	ssInactivityTimeout:= ReadRegistry("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "InactivityTimeoutSecs", 0)
 	if (ssInactivityTimeout != 0)
 		ssMachineOK:= true
+	logInfo(A_LineNumber, "TestScreenSaver: ssMachineOK= " ssMachineOK ", ssInactivityTimeout= " ssInactivityTimeout)
 
 	; local ScreenSaver
 	ssLocalOK:= false
@@ -1231,6 +1232,7 @@ TestScreenSaver:
 	ssLocalTimeOut:=	ReadRegistry("HKCU\Control Panel\Desktop", "ScreenSaveTimeOut", 0)
 	if (ssLocalActive == 1 and ssLocalIsSecure == 1 and ssLocalTimeOut <= ScreenSaverIdleMaximum)
 		ssLocalOK:= true
+	logInfo(A_LineNumber, "TestScreenSaver: ssLocalOK= " ssLocalOK ", ssLocalActive= " ssLocalActive ", ssLocalIsSecure= " ssLocalIsSecure ", ssLocalTimeOut= " ssLocalTimeOut ", ScreenSaverIdleMaximum= " ScreenSaverIdleMaximum)
 
 	; GPO ScreenSaver
 	ssGpoOK:= false
@@ -1239,11 +1241,12 @@ TestScreenSaver:
 	ssGpoTimeOut:=	ReadRegistry("HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop", "ScreenSaveTimeOut", 0)
 	if (ssGpoActive == 1 and ssGpoIsSecure == 1 and ssGpoTimeOut <= ScreenSaverIdleMaximum)
 		ssGpoOK:= true
+	logInfo(A_LineNumber, "TestScreenSaver: ssGpoOK= " ssGpoOK ", ssGpoActive= " ssGpoActive ", ssGpoIsSecure= " ssGpoIsSecure ", ssGpoTimeOut= " ssGpoTimeOut ", ScreenSaverIdleMaximum= " ScreenSaverIdleMaximum)
 
 	logInfo(A_LineNumber, "TestScreenSaver: ssInactivityTimeout= " ssInactivityTimeout ", ssLocalActive= " ssLocalActive ", ssLocalIsSecure= " ssLocalIsSecure ", ssLocalTimeOut= " ssLocalTimeOut ", ssGpoOK= " ssGpoOK ", ssGpoActive= " ssGpoActive ", ssGpoIsSecure= " ssGpoIsSecure ", ssGpoTimeOut= " ssGpoTimeOut)
 	if (!ssLocalOK and !ssGpoOK and !ssMachineOK) {
-		LogError(A_LineNumber, "TestScreenSaver: Active screensaver not found . PAM-RDP-Heartbeat is not started")
-		MsgBox, 0x1010, %gProgramTitle%, An active password protected ScreenSaver is not identified on the desktop. If defined, the timout may be set beyond the maximum of 30 minutes. This is a mandatory requirement when using the PAM RDP Heartbeat program.`n`nPAM RDP Heartbeat is not started.
+		LogError(A_LineNumber, "TestScreenSaver: Active screensaver not found or invalid timeout. PAM-RDP-Heartbeat is not started")
+		MsgBox, 0x1010, %gProgramTitle%, An active password protected ScreenSaver is not identified on the desktop. If defined, the timout may be set beyond the allowed maximum. This is a mandatory requirement when using the PAM RDP Heartbeat program.`n`nPAM RDP Heartbeat is not started.
 		ExitApp
 	}
 	return
