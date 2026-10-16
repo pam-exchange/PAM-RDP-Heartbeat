@@ -22,14 +22,16 @@ inc-version:
 build: inc-version
 	@echo Building PAM RDP Heartbeat...
 	-if not exist $(DIST) mkdir $(DIST)
+	-if exist $(DIST)\PAM-RDP-Heartbeat-Install-*.exe del /Q /F $(DIST)\PAM-RDP-Heartbeat-Install-*.exe
+	-if exist $(DIST)\PAM-RDP-Heartbeat.exe del /Q /F $(DIST)\PAM-RDP-Heartbeat.exe
 	-"$(AHK_HOME)\Compiler\ahk2exe.exe" /base "$(AHK_HOME)\Compiler\Unicode 64-bit.bin" /compress 2 /icon "$(SRC)\$(NAME).ico" /in "$(SRC)\$(NAME).ahk" /out "$(DIST)\$(NAME).exe"
 	-copy /Y LICENSE $(DIST)
+	-copy /Y version $(DIST)
 	-copy /Y "$(SRC)\pam-rdp-heartbeat.reg" $(DIST)
 	-"$(INNO_HOME)\ISCC.exe" /O"$(DIST)" /DMyAppVersion="$(shell $(PYTHON) -c "print(open('version').read().strip())")" "$(SRC)\PAM-RDP-Heartbeat.iss"
 
 package:
 	@echo Packaging PAM RDP Heartbeat...
-	-if exist PAM-RDP-Heartbeat-*.zip del /Q /F PAM-RDP-Heartbeat-*.zip
 	cd $(DIST) && zip -r ..\PAM-RDP-Heartbeat-$(shell $(PYTHON) -c "print(open('version').read().strip())").zip *
 	zip -r PAM-RDP-Heartbeat-Source-$(shell $(PYTHON) -c "print(open('version').read().strip())").zip docs src scripts build.cmd makefile README.md LICENSE version
 

@@ -40,8 +40,7 @@ Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 VersionInfoVersion={#MyAppVersion}
-VersionInfoTitle={#MyAppName}
-VersionInfoDescription={#MyAppName}
+VersionInfoDescription=Setup {#MyAppName}
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoCopyright={#MyCopyright}
 VersionInfoProductName={#MyAppName}
@@ -54,6 +53,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "..\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\dist\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\dist\pam-rdp-heartbeat.reg"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\dist\version"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
