@@ -46,7 +46,7 @@ installing it first.
 To build **PAM RDP Heartbeat** from source, you need the following toolchain:
 
 + **GNU Make** (or compatible `make` utility)
-+ **Python 3** (used by the build script to increment build numbers)
++ **Python** (used by the build script to increment build numbers)
 + **AutoHotkey v1** (version 1.1.37.02 or newer v1 series) with `Ahk2Exe` compiler (Note: AHK v2 is not supported)
 + **Inno Setup** (version 6.3.3 or 7.1.0+) with `ISCC` compiler (for generating the installer)
 + **Zip / PowerShell** (for packaging and installation)
