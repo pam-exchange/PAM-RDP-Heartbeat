@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-;@Ahk2Exe-SetFileVersion 1.1.0.12
-;@Ahk2Exe-SetProductVersion 1.1.0.12
+;@Ahk2Exe-SetFileVersion 1.2.0.13
+;@Ahk2Exe-SetProductVersion 1.2.0.13
 ;@Ahk2Exe-SetCopyright Copyright (c) 2024-2026 PAM-Exchange
 ;@Ahk2Exe-SetCompanyName PAM-Exchange
 ;@Ahk2Exe-SetProductName PAM RDP Heartbeat
@@ -47,7 +47,7 @@ SetKeyDelay,0,50
 ;-------
 ; Information about the script
 SplitPath, A_ScriptFullPath,,,,gScriptName,
-gVersion:= "1.1.0.12"
+gVersion:= "1.2.0.13"
 
 global gProgramTitle:= "PAM RDP Heartbeat"
 global gSelfPid:= DllCall("GetCurrentProcessId")
