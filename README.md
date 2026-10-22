@@ -59,6 +59,7 @@ The version number is stored in the `version` file in the format `1.1.0.x`, wher
 You can run `make` or `build.cmd` with the following targets:
 
 + `make build` (or `build.cmd build`): Increments the build number in `version`, updates source file compiler directives, compiles `src/pam-rdp-heartbeat.ahk` to executable in `dist/`, copies configuration files, and builds the Inno Setup installer.
++ `make build-version` (or `build.cmd build-version`): Same as `make build` except that the build number in `version` is not incremented.
 + `make package` (or `build.cmd package`): Packages the compiled binary distribution into `PAM-RDP-Heartbeat-1.1.0.x.zip` and the source files into `PAM-RDP-Heartbeat-Source-1.1.0.x.zip`.
 + `make all` (or `make` / `build.cmd`): Runs both `build` and `package`.
 + `make install`: Unzips `PAM-RDP-Heartbeat-1.1.0.x.zip` to `C:\Program Files\PAM-Exchange\PAM-RDP-Heartbeat`.

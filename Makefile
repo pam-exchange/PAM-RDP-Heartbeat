@@ -11,7 +11,7 @@ DIST_DIR ?= dist
 SRC_DIR ?= src
 NAME = pam-rdp-heartbeat
 
-.PHONY: all bump-version inc-version build installer zip source-zip package install uninstall clean
+.PHONY: all bump-version inc-version no-bump-version build build-version compile installer zip source-zip package install uninstall clean
 
 all: package
 
@@ -19,7 +19,15 @@ bump-version inc-version:
 	@rm -f $(DIST_DIR)/PAM-RDP-Heartbeat-Install-*.exe $(DIST_DIR)/PAM-RDP-Heartbeat-*.zip 2>/dev/null || true
 	@$(PYTHON) bump_version.py
 
-build: bump-version
+no-bump-version:
+	@rm -f $(DIST_DIR)/PAM-RDP-Heartbeat-Install-*.exe $(DIST_DIR)/PAM-RDP-Heartbeat-*.zip 2>/dev/null || true
+	@$(PYTHON) bump_version.py --no-increment
+
+build: bump-version compile
+
+build-version: no-bump-version compile
+
+compile:
 	@echo Building PAM RDP Heartbeat...
 	@mkdir -p $(DIST_DIR)
 	@if [ -d "$(AHK_HOME)/Compiler" ] && [ -f "$(AHK_HOME)/Compiler/ahk2exe.exe" ]; then \
