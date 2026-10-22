@@ -1,4 +1,4 @@
-# PAM-RDP-Heartbeat
+# PAM RDP Heartbeat
 Have you experienced a sometime lengthy process starting an RDP session through
 your favorite PAM tool, only to find that your server will kick in with a screen
 saver? To unlock the session again, you will need a password, but you do not
@@ -7,7 +7,7 @@ have it?
 Nothing to it, you have to close the session and restart the process through
 your PAM tool to open a new session again.
 
-This is where PAM-RDP-Heartbeat comes into play.
+This is where **PAM RDP Heartbeat** comes into play.
 
 The program will send heartbeat signals to the open RDP sessions, thus preventing
 them to go into screen saver/lock mode.
@@ -22,7 +22,7 @@ settings you can configure how frequent the heartbeat signal is used and other
 settings too. To show/hide the PAM-RDP-Heartbeat window to the foreground press
 `Ctrl-Alt-ScrollLock`.
 
-The PAM-RDP-Heartbeat will send heartbeat signals to RDP sessions opened through
+**PAM RDP Heartbeat** will send heartbeat signals to RDP sessions opened through
 mstsc.exe (regular RDP client) and to RDP sessions opened through Symantec PAM
 RDP applets.
 
@@ -35,14 +35,27 @@ RDP applets.
 + `F5` will refresh the list (focus is PAM RDP Heartbeat window)
 
 ## Installation
-Just copy the executable to you favorite location.
+There is an installer program available. Run the installer as administrator and the 
+programs are installed and registry is updated.
+
+You can also merge the registry file `pam-rdp-heartbeat.reg` and run the program without
+installing it first.
 
 ## Compilation
 You want to compile the AutoHotKey sources yourself?
 
 Not a problem.
 
-You need to have AutoHotKey version 1.37.02 or newer version 1 series installed. It will not compile with AHK v2.
+You need to have AutoHotKey version 1.37.02 or newer version 1 series installed. 
+It will not compile with AHK v2.
+
+If you want to build the installer you will need Inno Setup version 6.3.3.
+
+Run the script `build.cmd` and it will package the source as executable and create 
+the installer file and package everything into a zip-file.
+
+If you really want to control the compilation and packaging of the AutoHotKey source 
+file, run the command below.
 
 To create an executable from the sources use the Ahk2Exe utility GUI or you can
 use this command (one line):
@@ -56,21 +69,29 @@ use this command (one line):
     /out ".\bin\pam-rdp-heartbeat.exe"
 ```
 
-Here AutoHotKey is installed in c:\opt\AutohotKey-v1 directory. The command
-uses UPX for compressions, but you can easily do without. Just remove the /compress parameter.
+Here AutoHotKey is installed in `c:\opt\AutohotKey-v1` directory. The command
+uses UPX for compressions, but you can easily do without. Just remove the `/compress` parameter.
 
 ## Log files
-pam-rdp-heartbeat will create a log file in the users %TEMP% folder. If the size
-of the log file is larger than 5 MB, it will be rolled to
-pam-rdp-heartbeat.log.1. An existing pam-rdp-heartbeat.log.1 file will be rolled
-to pam-rdp-heartbeat.log.2, etc. Last log file kept is pam-rdp-heartbeat.log.5.
+`pam-rdp-heartbeat` program will create a log file in the users %TEMP% folder. If the size
+of the log file is larger than 5 MB, it will be rolled to `pam-rdp-heartbeat.log.1`.<br>
+An existing `pam-rdp-heartbeat.log.1` file will be rolled to `pam-rdp-heartbeat.log.2`, etc. 
+Last log file kept is `pam-rdp-heartbeat.log.5`.
 
 ## Registry
 Parameters to the program is stored in the Windows Registry at the key
-`HKCU\PAM-Exchange\PAM-RDP-Heartbeat`.
+`HKLM\PAM-Exchange\PAM-RDP-Heartbeat`.
+
+The file `pam-rdp-heartbeat.reg` contains the registry keys created by the installer. 
+If you do not use the installer, you can merge the file to your registry.
+
+## Configuration
+In the `pam-rdp-heartbeat` program you can define various settings. These settings user individual 
+and are stored in the users roaming profile in the file 
+`%AppData%\PAM-Exchange\PAM-RDP-Heartbeat\pam-rdp-heartbeat.properties`. 
 
 ## Security considerations
-The pam-rdp-heartbeat can be seen as a violation to the server settings having
+**PAM RDP Heartbeat** can be seen as a violation to the server settings having
 a screen saver/lock active and you should consult your IT administrators before
 using it.
 
