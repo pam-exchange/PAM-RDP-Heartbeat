@@ -1,2 +1,4 @@
-
 /dist/
+/build/
+PAM-RDP-Heartbeat*.zip
+pam-rdp-heartbeat.spec

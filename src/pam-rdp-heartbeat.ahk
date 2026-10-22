@@ -1,21 +1,33 @@
 /*
-Copyright (C) 2024-2025 PAM Exchange
+MIT License
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+Copyright (c) 2024-2026 PAM-Exchange
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
-USA
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 */
+
+;@Ahk2Exe-SetFileVersion 1.2.0.27
+;@Ahk2Exe-SetProductVersion 1.2.0
+;@Ahk2Exe-SetCopyright Copyright (c) 2024-2026 PAM-Exchange
+;@Ahk2Exe-SetCompanyName PAM-Exchange
+;@Ahk2Exe-SetProductName PAM RDP Heartbeat
+;@Ahk2Exe-SetDescription Sends heartbeat signal to RDP sessions
 
 ;#SingleInstance Ignore		; don't start if already running
 #SingleInstance Force		; relaunch if already running
@@ -33,9 +45,9 @@ SetWorkingDir %A_ScriptDir%
 SetKeyDelay,0,50
 
 ;-------
-; Information about the script 
-SplitPath, A_ScriptFullPath,,,,gScriptName, 
-gVersion:= "1.1.0"
+; Information about the script
+SplitPath, A_ScriptFullPath,,,,gScriptName,
+gVersion:= "1.2.0.27"
 
 global gProgramTitle:= "PAM RDP Heartbeat"
 global gSelfPid:= DllCall("GetCurrentProcessId")
@@ -102,7 +114,7 @@ Menu, Tray, Click, 1
 
 Menu, ListMenu, Add, Show, menuDo
 
-; --- 
+; ---
 ; Application menu
 
 Menu, FileMenu, Add, %mnuFileExitTxt%, mnuFileExitEvent
@@ -128,7 +140,7 @@ Menu, MyMenuBar, Add, %mnuHelpTxt%, :HelpMenu
 
 if (StayOnTop)
 	Menu, SettingsMenu, Check, %mnuSettingsStayOnTopTxt%
-	
+
 if (StartMinimized)
 	Menu, SettingsMenu, Check, %mnuSettingsStartMinimizedTxt%
 
@@ -213,7 +225,7 @@ GuiSize:
 		guiHidden:= 0
 	}
 	else {
-		ifWinNotActive, %gProgramTitle% 
+		ifWinNotActive, %gProgramTitle%
 		{
 			WinShow, %gProgramTitle%
 			WinActivate, %gProgramTitle%
@@ -224,7 +236,7 @@ GuiSize:
 		}
 	}
 	return
-	
+
 #if WinActive(gProgramTitle)
 ; Only when Heartbeat GUI is active
 
@@ -245,7 +257,7 @@ mnuMinimizeAllEvent:
 		WinMinimize, ahk_id %hwnd%
 		Sleep, 50
 	}
-	
+
 	; all SymantecPAM applets
 	WinGet, allSymantecPAM, List, ahk_exe CAPAMClient\.exe ahk_class SunAwtFrame,,(CA PAM LDAP Browser|CA Privileged Access Manager|Symantec PAM LDAP Browser|Symantec Privileged Access Manager)
 	Loop, %allSymantecPAM% {
@@ -253,7 +265,7 @@ mnuMinimizeAllEvent:
 		WinMinimize, ahk_id %hwnd%
 		Sleep, 50
 	}
-	
+
 	WinActivate, ahk_id %main_hWnd%
 	GuiControl, Focus, btnClose
 	return
@@ -270,7 +282,7 @@ mnuShowAllEvent:
 	return
 
 #if
-	
+
 ;-------------------------
 mnuFileExitEvent:
 btnExitEvent:
@@ -284,7 +296,7 @@ GuiClose:
 ;-------------------------
 mnuHelpQuickGuideEvent:
 	Gui, +OwnDialogs
-	MsgBox, 0, % StrReplace(gProgramTitle " - " mnuHelpQuickGuideTxt, "&"), 
+	MsgBox, 0, % StrReplace(gProgramTitle " - " mnuHelpQuickGuideTxt, "&"),
 	(
 PAM RDP Heartbeat
 -----------------------
@@ -295,14 +307,14 @@ PAM RDP Heartbeat
 ;-------------------------
 mnuHelpAboutEvent:
 	Gui, +OwnDialogs
-	MsgBox, 0x40, % StrReplace(gProgramTitle " - " mnuHelpAboutTxt, "&"), 
+	MsgBox, 0x40, % StrReplace(gProgramTitle " - " mnuHelpAboutTxt, "&"),
 	(
 PAM RDP Heartbeat
 -----------------------
 %AboutTxt%
 
 Version %gVersion%
-Copyright ©2024-2025 PAM-Exchange
+Copyright (c) 2024-2026 PAM-Exchange
 	)
 	return
 
@@ -334,7 +346,7 @@ mnuSettingsStayOnTopEvent:
 		Menu, SettingsMenu, Uncheck, %mnuSettingsStayOnTopTxt%
 	}
 	return
-	
+
 ;-------------------------
 mnuSettingsStartMinimizedEvent:
 	StartMinimized:= !StartMinimized
@@ -343,9 +355,9 @@ mnuSettingsStartMinimizedEvent:
 	else
 		Menu, SettingsMenu, Uncheck, %mnuSettingsStartMinimizedTxt%
 	return
-	
+
 ;-------------------------
-mnuSettingsPreferencesEvent:	
+mnuSettingsPreferencesEvent:
 	SetTimer, RefreshProcess, Off
 	SetTimer, HeartbeatProcess, Off
 
@@ -353,11 +365,11 @@ mnuSettingsPreferencesEvent:
 	w2:= GetTextSize(RefreshFrequencyTxt)
 	edtX:= (w1<w2) ? w2 : w1
 	edtX:= edtX+20
-	
+
 	WinGetPos,posX,posY,,,%gProgramTitle%
 	posX:= posX+4*marginX
 	posY:= posY+4*marginY
-	
+
 	Gui, 1: +Disabled
 	GuiOptions:= "+SysMenu +Owner +AlwaysOnTop -ToolWindow -MinimizeBox -MaximizeBox +Hwndsettings_hWnd"
 	Gui, 2:New, %GuiOptions%
@@ -378,11 +390,11 @@ mnuSettingsPreferencesEvent:
 
 	Gui, 2:Add, CheckBox, xm vStayOnTop checked%StayOnTop%, %StayOnTopTxt%
 	Gui, 2:Add, CheckBox, xm vStartMinimized checked%StartMinimized%, %StartMinimizedTxt%
-	Gui, 2:Add, Text, xm h5, 
-	
+	Gui, 2:Add, Text, xm h5,
+
 	Gui, 2:Add, Button, section xs w%btnWidth% h%btnHeight% gbtnCancelEvent vbtnCancel, %btnCancelTxt%
 	Gui, 2:Add, Button, ys w%btnWidth% h%btnHeight% Default gbtnUpdateEvent vbtnUpdate, %btnUpdateTxt%
-	
+
 	Gui, 2:Show, x%posX% y%posY% Autosize, %mnuSettingsPreferencesTxt%
 	Gui, 2:+LastFound
 	WinWaitClose
@@ -402,10 +414,10 @@ btnCancelEvent:
 	SetTimer, HeartbeatProcess, On
 	WinActivate, ahk_id %main_Hwnd%
 	return
-	
+
 btnUpdateEvent:
 	Gui, 2: Submit, NoHide
-	
+
 	; Stay On Top
 	if (StayOnTop) {
 		WinSet, AlwaysOnTop, On
@@ -433,7 +445,7 @@ btnUpdateEvent:
 		RefreshTime:= RefreshFrequency*1000
 		SetTimer, RefreshProcess,% RefreshTime
 	}
-	
+
 	; HeartbeatFrequency
 	edtHeartbeatFreqency:= edtHeartbeatFreqency+0
 	If (edtHeartbeatFreqency < HeartbeatMinimum or strlen(edtHeartbeatFreqency)==0) {
@@ -451,12 +463,12 @@ btnUpdateEvent:
 UseTransparentEvent:
 	GuiControlGet, UseTransparent,, UseTransparent
 	return
-	
+
 ;-------------------------
 SessionListEvent:
 	Gui,ListView,%A_GuiControl%
 	switch A_GuiEvent {
-	case "RightClick": 
+	case "RightClick":
 		MouseGetPos, musX, musY
 		Menu, ListMenu, Show, %musX%,%musY%
 		return
@@ -473,7 +485,7 @@ ShowMstscWindow:
 	LV_GetText(hwnd,RN,listColHwndIdx)
 	ActivateWindow(hwnd)
 	return
-	
+
 ;-------------
 menuDo:
 	If (A_ThisMenuItem = "Show")
@@ -504,7 +516,7 @@ RefreshProcess:
 
 		if (strlen(WindowList[hwnd]) == 0)
 			WindowList[hwnd]= 0
-		
+
 		state:= WindowList[hwnd]
 		lv_add("", title, pid, createTime, duration, state, hwnd)
 		logTrace(A_Linenumber, "RefreshProcess: title= '" title "', pid= " pid ", start= " createTime ", duration= " duration ", state= " state ", hwnd= " hwnd)
@@ -526,15 +538,15 @@ RefreshProcess:
 
 		if (strlen(WindowList[hwnd]) == 0)
 			WindowList[hwnd]= 0
-		
+
 		state:= WindowList[hwnd]
 		lv_add("", title, pid, createTime, duration, state, hwnd)
 		logTrace(A_Linenumber, "RefreshProcess: title= " title ", pid= " pid ", start= " createTime ", duration= " duration ", state= " state ", hwnd= " hwnd)
 	}
-	
+
 	LV_ModifyCol(1, "Sort")
 	GuiControl, +Redraw, SessionList
-	
+
 	SetTimer, RefreshProcess, On
 	return
 
@@ -546,19 +558,19 @@ HeartbeatProcess:
 	WinGet, allMstsc, List, ahk_class TscShellContainerClass
 	Loop, %allMstsc% {
 		hwnd:= allMstsc%A_Index%
-		
+
 		; just in case the EVENT_SYSTEM_MINIMIZESTART was lost ...
 		WinGet MMX, MinMax, ahk_id %hwnd%
 		if (MMX == -1) {
 			HideWindow(hwnd)
 		}
-		
+
 		; Send heartbeat signal to mstsc windows (not minimized)
 		SendMessage, 0x006, 1, 0,, ahk_id %hwnd%
 		;WM_ACTIVATE(0x006)  WA_ACTIVE(1)
 		logDebug(A_Linenumber, "HeartbeatProcess: (Mstsc) send heartbeat SendMessage to hwnd= " hwnd)
 	}
-	
+
 	; Symantec PAM applet
 	SetControlDelay -1
 	WinGet, allSymantecPAM, List, ahk_exe CAPAMClient\.exe ahk_class SunAwtFrame,, (CA PAM LDAP Browser|CA Privileged Access Manager|Symantec PAM LDAP Browser|Symantec Privileged Access Manager)
@@ -581,19 +593,19 @@ HeartbeatProcess:
 			logDebug(A_Linenumber, "HeartbeatProcess: (SymantecPAM Applet) send heartbeat ControlClick to hwnd= " hwnd)
 			loop, 2 {
 				;ControlFocus,,ahk_id %hwnd%
-				;ControlClick, x30 y30, ahk_id %hwnd%,,,,NA 
+				;ControlClick, x30 y30, ahk_id %hwnd%,,,,NA
 				ControlClick, x200 y200, ahk_id %hwnd%,,,,NA POS
 				Sleep, 10
 			}
 		}
 		*/
 	}
-	
+
 	SetTimer, HeartbeatProcess, On		; restart timer
 	return
 
 ;--------------------------------------------------------------------------------------------------------
-HideWindow(hwnd) 
+HideWindow(hwnd)
 {
 	SetTimer, HeartbeatProcess, Off
 	global WindowList
@@ -614,12 +626,12 @@ HideWindow(hwnd)
 			PostMessage, 0x112, 0xF120,,, ahk_id %hwnd%   ; 0x112 = WM_SYSCOMMAND, 0xF120 = SC_RESTORE
 			WindowList[hwnd]:= 1	; 00001 - fullscreen
 		}
-		else 
+		else
 			WindowList[hwnd]:= 2	; 00010 - window
 
 		logDebug(A_LineNumber, "HideWindow: WinSet Bottom, hwnd= " hwnd)
 		WinSet, Bottom,, ahk_id %hwnd%
-	
+
 		nextHwnd:= NextWindow()
 		WinGetTitle, title, ahk_id %nextHwnd%
 		logDebug(A_LineNumber, "HideWindow: nextHwnd= " nextHwnd ", title= " title)
@@ -630,12 +642,12 @@ HideWindow(hwnd)
 	}
 	SetTimer, HeartbeatProcess, On		; restart timer
 }
-	
+
 ;--------------------------------------------------------------------------------------------------------
 ActivateWindow(hwnd)
 {
 	clickActive:= false
-	
+
 	logDebug(A_LineNumber, "ActivateWindow: WinSet Transparent=255, hwnd= " hwnd)
 	WinSet, Transparent, 255, ahk_id %hwnd%
 	logDebug(A_LineNumber, "ActivateWindow: WinActivate, hwnd= " hwnd)
@@ -667,7 +679,7 @@ FormatSeconds(NumberOfSeconds)  ; Convert the specified number of seconds to hh:
 	sec:= t
 	str:= Format("{:02}:{:02}:{:02}", hrs,min,sec)
 	return str
-}	
+}
 
 ;--------------------------------------------------------------------------------------------------------
 ProcessCreationTime( PID )  ; Requires AutoHotkey v1.0.46.03+
@@ -689,7 +701,7 @@ ProcessCreationTime( PID )  ; Requires AutoHotkey v1.0.46.03+
 	Loop 16   {       ; Extracting and concatenating 8 words from a SYSTEMTIME structure
 		Word := Mod(A_Index-1,2) ? "" :  *( &SysT +A_Index-1 ) + ( *(&SysT +A_Index) << 8 )
 		Time .= StrLen(Word) = 1 ? ( "0" . Word ) : Word  ; Prefixing "0" for single digits
-	} 
+	}
 
 	Return SubStr(Time,1,6) . SubStr(Time,9,8) ; YYYYMMDD24MISS
 }
@@ -748,7 +760,7 @@ ShowAllMstscWindow() {
 		WinActivate, ahk_id %hwnd%
 		Sleep, 50
 	}
-	
+
 	; all SymantecPAM applets
 	WinGet, allSymantecPAM, List, ahk_exe CAPAMClient\.exe ahk_class SunAwtFrame,,(CA PAM LDAP Browser|CA Privileged Access Manager|Symantec PAM LDAP Browser|Symantec Privileged Access Manager)
 	Loop, %allSymantecPAM% {
@@ -799,8 +811,8 @@ ShellCallback(wParam, lParam) {
 				WinSet, Transparent, 255, ahk_id %lParam%
 			}
 			return false
-		} 
-	} 
+		}
+	}
 }
 
 ;--------------------------------------------------------------------------------------------------------
@@ -813,24 +825,24 @@ EventHookProc( hWinEventHook, Event, hwnd, idObject, idChild, dwEventThread, dwm
 		WinGetClass, class, ahk_id %hwnd%
 		logDebug(A_LineNumber, "EventHookProc: event= 0x16, class= " class ", hwnd= " hwnd)
 		if (class == "TscShellContainerClass") {
-			HideWindow(hwnd) 
+			HideWindow(hwnd)
 			return false
 		}
 	}
 }
 
 ;--------------------------------------------------------------------------------------------------------
-SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags) 
+SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags)
 {
 	DllCall("CoInitialize", Uint, 0)
 	return DllCall("SetWinEventHook"
-	, Uint,eventMin	
-	, Uint,eventMax	
+	, Uint,eventMin
+	, Uint,eventMax
 	, Uint,hmodWinEventProc
 	, Uint,lpfnWinEventProc
 	, Uint,idProcess
 	, Uint,idThread
-	, Uint,dwFlags)	
+	, Uint,dwFlags)
 }
 
 ;--------------------------------------------------------------------------------------------------------
@@ -839,7 +851,7 @@ SetEventHook(state)
     static eventHookInstalled := false
 	static hWinEventHook
 	static EventHookProcAdr
-	
+
     if (!eventHookInstalled and state) {
 		ExcludeScriptMessages = 1 ; 0 to include
 		EventHookProcAdr := RegisterCallback( "EventHookProc", "F" )
@@ -859,7 +871,7 @@ ReadRegistry(keyName,valueName,defaultValue=0)
 {
 	tmp:= 0
 	RegRead, tmp, %keyName%, %valueName%
-	
+
 	if (strlen(tmp)>0) {
 		return %tmp%
 	}
@@ -922,7 +934,7 @@ SetVariableDefaults:
 	listColDurationIdx:= 4
 	listColStateIdx:= 5
 	listColHwndIdx:= 6
-	
+
 	mnuFileTxt:= "&File"
 	mnuFileExitTxt:= "E&xit"
 
@@ -939,10 +951,10 @@ SetVariableDefaults:
 	mnuHelpTxt:= "&Help"
 	mnuHelpQuickGuideTxt:= "Quick &guide"
 	mnuHelpAboutTxt:= "&About"
-	
+
 	AboutTxt:= "The program sends heartbeat signals to RDP sessions. When RDP sessions are minimized, the RDP GUI is hidden and heartbeat messages are still being accepted by the session."
 	QuickGuideTxt:= "In the menu item 'Settings > Preferences' timers for background actions can be defined. The heartbeat timer will control how often the heartbeat is send to both active and hidden RDP sessions. The value should depend of the timeout values defined on the servers connected to from the Desktop. Typically, sending a heartbeat signal every 30'th second is sufficient. The refresh timer will control how often the list of RDP sessions is updated. Typical values are every 10 to 30 seconds. It is also possible to refress the list manually by pressiong F5. The flags 'Stay on Top' and 'Start Minimized' are controlling the PAM RDP Heartbeat window behaviour.\n\nAlt-Ctrl-ScrollLock\nWill show/activate or hide the GUI window. This will work even when showing an RDP fullscreen session.\n\nWhen the PAM RDP Heartbeat GUI is active, additional functions are available.\n\nAlt-Ctrl-Down\nMinimize/hide all RDP windows.\n\nAlt-Ctrl-Up\nRestore all hidden RDP windows.\n\nF5\nManually refresh the list of RDP sessions."
-	
+
 	AboutTxt:= StrReplace(AboutTxt,"\n","`n")
 	QuickGuideTxt:= StrReplace(QuickGuideTxt,"\n","`n")
 	return
@@ -952,7 +964,7 @@ LoadVariablesFromRegistry:
 	key:= "HKLM\Software\PAM-Exchange\PAM-RDP-Heartbeat"
 	;gLogLevel:= 					ReadRegistry(key, "LogLevel", gLogLevel)
 	;logInfo(A_Linenumber, "LoadVariablesFromRegistry: LogLevel= " gLogLevel)
-	
+
 	logDebug(A_Linenumber, "LoadVariablesFromRegistry: RegistryKey= " key)
 	HeartbeatMinimum:= 	 			ReadRegistry(key, "HeartbeatMinimum", HeartbeatMinimum)
 	listColDurationWdt:= 			ReadRegistry(key, "listColDurationWdt", listColDurationWdt)
@@ -969,7 +981,7 @@ LoadVariablesFromRegistry:
 	ScreenSaverIdleMaximum:=		ReadRegistry(key, "ScreenSaverIdleMaximum", ScreenSaverIdleMaximum)
 
 	;MsgBox, HeartbeatMinimum= %HeartbeatMinimum%`nRefreshMinimum= %RefreshMinimum%`nScreenSaverRequired= %ScreenSaverRequired%`nScreenSaverIdleMaximum= %ScreenSaverIdleMaximum%
-	
+
 	key:= key . "\" . language
 	btnCancelTxt:= 		 			ReadRegistry(key, "btnCancelTxt", btnCancelTxt)
 	btnCloseTxt:= 		 			ReadRegistry(key, "btnCloseTxt", btnCloseTxt)
@@ -1013,7 +1025,7 @@ LoadVariablesFromRegistry:
 
 	if (StayOnTop>1)
 		StayOnTop:= 1
-		
+
 	if (StartMinimized>1)
 		StartMinimized:= 1
 
@@ -1022,7 +1034,7 @@ LoadVariablesFromRegistry:
 
 	if (StartX>0x0000FFFF)
 		StartX:= 0	; negative
-		
+
 	if (StartY>0x0000FFFF)
 		StartY:= 0	; negative
 
@@ -1070,9 +1082,9 @@ LoadVariablesFromProperty:
 
 	global LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_DEBUG, LOG_TRACE
 	global gLogLevel, ErrorMessage
-	
+
 	logDebug(A_LineNumber, "readProperties: userPropertyFilename= " userPropertyFilename )
-	
+
 	if (!FileExist(userPropertyFilename)) {
 		logAlways(A_LineNumber, "readProperties: file not found '" userPropertyFilename "' - use defaults")
 		return
@@ -1156,7 +1168,7 @@ LoadVariablesFromProperty:
 	logInfo(A_LineNumber, "ReadProperties: Language= '" Language "' (final)")
 
 	;MsgBox, userPropertyFilename= %userPropertyFilename%`nHeartbeatFrequency= %HeartbeatFrequency%`nRefreshFrequency= %RefreshFrequency%`nStartMinimized= %StartMinimized%`nStartX= %StartX%`nStartY= %StartY%`nStayOnTop= %StayOnTop%`nLanguage= %Language%
-	
+
 	return
 
 ;--------------------------------------------------------------------------------------------------------
@@ -1164,15 +1176,15 @@ LoadVariablesFromProperty:
 ;
 SaveVariablesToProperty:
 	logDebug(A_LineNumber, "writeProperties: " userPropertyFilename)
-	
+
 	;global LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_DEBUG, LOG_TRACE
 	WinGetPos,posX,posY,,,%gProgramTitle%
-	
+
 	if FileExist( userPropertyFilename ) {
 		logDebug(A_LineNumber, "writeProperties: Delete file '" userPropertyFilename "'")
 		FileDelete, %userPropertyFilename%
 	}
-	
+
 	wrtLogLevel:= "LogLevel= " ((LogLevel = LOG_ERROR) ? "ERROR" : (LogLevel = LOG_WARNING) ? "WARNING" : (LogLevel = LOG_INFO) ? "INFO" : (LogLevel = LOG_DEBUG) ? "DEBUG" : "TRACE")
 	wrtHeartbeatFrequency:= "HeartbeatFrequency= " HeartbeatFrequency
 	wrtRefreshFrequency:= "RefreshFrequency= " RefreshFrequency
@@ -1193,9 +1205,9 @@ SaveVariablesToProperty:
 	content:= content "`n" wrtLanguage
 
 	FileAppend, %content%, %userPropertyFilename%
-	
+
 	;MsgBox, userPropertyFilename= %userPropertyFilename%`n`ncontent=`n%content%
-	
+
 	return
 
 ;--------------------------------------------------------------------------------------------------------
@@ -1211,6 +1223,7 @@ TestScreenSaver:
 	ssInactivityTimeout:= ReadRegistry("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "InactivityTimeoutSecs", 0)
 	if (ssInactivityTimeout != 0)
 		ssMachineOK:= true
+	logInfo(A_LineNumber, "TestScreenSaver: ssMachineOK= " ssMachineOK ", ssInactivityTimeout= " ssInactivityTimeout)
 
 	; local ScreenSaver
 	ssLocalOK:= false
@@ -1219,6 +1232,7 @@ TestScreenSaver:
 	ssLocalTimeOut:=	ReadRegistry("HKCU\Control Panel\Desktop", "ScreenSaveTimeOut", 0)
 	if (ssLocalActive == 1 and ssLocalIsSecure == 1 and ssLocalTimeOut <= ScreenSaverIdleMaximum)
 		ssLocalOK:= true
+	logInfo(A_LineNumber, "TestScreenSaver: ssLocalOK= " ssLocalOK ", ssLocalActive= " ssLocalActive ", ssLocalIsSecure= " ssLocalIsSecure ", ssLocalTimeOut= " ssLocalTimeOut ", ScreenSaverIdleMaximum= " ScreenSaverIdleMaximum)
 
 	; GPO ScreenSaver
 	ssGpoOK:= false
@@ -1227,11 +1241,12 @@ TestScreenSaver:
 	ssGpoTimeOut:=	ReadRegistry("HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop", "ScreenSaveTimeOut", 0)
 	if (ssGpoActive == 1 and ssGpoIsSecure == 1 and ssGpoTimeOut <= ScreenSaverIdleMaximum)
 		ssGpoOK:= true
+	logInfo(A_LineNumber, "TestScreenSaver: ssGpoOK= " ssGpoOK ", ssGpoActive= " ssGpoActive ", ssGpoIsSecure= " ssGpoIsSecure ", ssGpoTimeOut= " ssGpoTimeOut ", ScreenSaverIdleMaximum= " ScreenSaverIdleMaximum)
 
 	logInfo(A_LineNumber, "TestScreenSaver: ssInactivityTimeout= " ssInactivityTimeout ", ssLocalActive= " ssLocalActive ", ssLocalIsSecure= " ssLocalIsSecure ", ssLocalTimeOut= " ssLocalTimeOut ", ssGpoOK= " ssGpoOK ", ssGpoActive= " ssGpoActive ", ssGpoIsSecure= " ssGpoIsSecure ", ssGpoTimeOut= " ssGpoTimeOut)
 	if (!ssLocalOK and !ssGpoOK and !ssMachineOK) {
-		LogError(A_LineNumber, "TestScreenSaver: Active screensaver not found . PAM-RDP-Heartbeat is not started")
-		MsgBox, 0x1010, %gProgramTitle%, An active password protected ScreenSaver is not identified on the desktop. If defined, the timout may be set beyond the maximum of 30 minutes. This is a mandatory requirement when using the PAM RDP Heartbeat program.`n`nPAM RDP Heartbeat is not started.
+		LogError(A_LineNumber, "TestScreenSaver: Active screensaver not found or invalid timeout. PAM-RDP-Heartbeat is not started")
+		MsgBox, 0x1010, %gProgramTitle%, An active password protected ScreenSaver is not identified on the desktop. If defined, the timout may be set beyond the allowed maximum. This is a mandatory requirement when using the PAM RDP Heartbeat program.`n`nPAM RDP Heartbeat is not started.
 		ExitApp
 	}
 	return
@@ -1261,12 +1276,12 @@ NextWindow() {
 			If (!((es & WS_EX_TOOLWINDOW) && !(es & WS_EX_APPWINDOW)) && !IsInvisibleWin10BackgroundAppWindow(windowID))
 			{
 				AltTabTotalNum ++
-				AltTabListID[AltTabTotalNum] := windowID			
+				AltTabListID[AltTabTotalNum] := windowID
 			}
 		}
 	}
 	DetectHiddenWindows, %HiddenWindows%
-	
+
 	; now find next window not minimized by heartbeat
 	for index, element in AltTabListID {
 		hwnd:= AltTabListID[A_Index]
@@ -1278,7 +1293,7 @@ NextWindow() {
 		; If nothing else is found, use desktop
 		hwnd:= WinExist("Program Manager ahk_class Progman")
 	}
-	
+
 	/*
 	WinGet, pid, PID, ahk_id %hwnd%
 	WinGetTitle, title, ahk_id %hwnd%
@@ -1290,8 +1305,8 @@ NextWindow() {
 
 Decimal_to_Hex(var) {
 	SetFormat, IntegerFast, H
-	var += 0 
-	var .= "" 
+	var += 0
+	var .= ""
 	SetFormat, Integer, D
 	return var
 }
@@ -1315,14 +1330,14 @@ DWMWA_CLOAKED: If the window is cloaked, the following values explain why:
 ;---------------------------------------------------------------------------------
 LogRoll(filename, maxSize:= 5, keep:=5) {
 
-	; Roll files if the filename is larger than maxSize. 
+	; Roll files if the filename is larger than maxSize.
 	; Copy/move filename.4 to filename.5, filename.3 to filename.4, etc.
 	; finally copy/move filename to filename.1
 	; filename with highest index (keep value) is replaced with previous index file.
-	
-	if (maxSize < 1) 
+
+	if (maxSize < 1)
 		maxSize:= 1
-		
+
 	FileGetSize, size, %filename%, M
 	if (size>=maxSize) {
 		logDebug(A_LineNumber, "LogRoll: roll files - filename= '" filename "', size= " size " MB, maxSize= " maxSize " MB")
@@ -1331,8 +1346,8 @@ LogRoll(filename, maxSize:= 5, keep:=5) {
 			fn2:= filename "." (keep-1)
 			FileMove, %fn2%, %fn1%, true	; move and overwrite if exist
 			if ErrorLevel {
-				; using explicit filename, thus errorlevel is only set if the file exist and 
-				; the move is unsuccessful. 
+				; using explicit filename, thus errorlevel is only set if the file exist and
+				; the move is unsuccessful.
 				ErrorMessage:= "Cannot copy/move '" fn2 "' to '" fn1 "', lastError= " A_LastError
 				logError(A_LineNumber, "LogRoll: " ErrorMessage)
 			}
@@ -1340,8 +1355,8 @@ LogRoll(filename, maxSize:= 5, keep:=5) {
 		}
 		FileMove, %filename%, %fn2%, true
 		if ErrorLevel {
-			; using explicit filename, thus errorlevel is only set if the file exist and 
-			; the move is unsuccessful. 
+			; using explicit filename, thus errorlevel is only set if the file exist and
+			; the move is unsuccessful.
 			ErrorMessage:= "Cannot copy/move '" filename "' to '" fn2 "', lastError= " A_LastError
 			logError(A_LineNumber, "LogRoll: " ErrorMessage)
 		}
@@ -1350,7 +1365,7 @@ LogRoll(filename, maxSize:= 5, keep:=5) {
 
 ;---------------------------------------------------------------------------------
 log(level, line, msg) {
-	if (level <= gLogLevel) { 
+	if (level <= gLogLevel) {
 		if (level == LOG_ALWAYS)
 			levelTxt:= "ALW"
 		if (level == LOG_ERROR)
@@ -1363,7 +1378,7 @@ log(level, line, msg) {
 			levelTxt:= "DBG"
 		if (level == LOG_TRACE)
 			levelTxt:= "TRC"
-		
+
 		FormatTime, TimeString, , yy/MM/dd HH:mm:ss
 		txt:= TimeString " [" gSelfPidHex "] " levelTxt " " msg " [" line "]`n"
 		h:= FileOpen(gLogFile,"a")
